@@ -6,7 +6,10 @@ $myquerytwo = mysql(brilliantDirectories::getDatabaseConfiguration('database'),
 						FROM users_reviews
                         JOIN users_portfolio ON users_reviews.review_id = users_portfolio.group_id
 						WHERE users_reviews.user_id = 3 AND users_portfolio.data_id = 9999 AND users_portfolio.data_type = 13
-						ORDER BY users_reviews.review_id DESC;");
+						ORDER BY users_reviews.review_id DESC LIMIT 8;");
+$myresult = mysql_fetch_array($myquery);
+$i=8;
+if($myresult){
 ?>
 
 
@@ -20,10 +23,10 @@ $myquerytwo = mysql(brilliantDirectories::getDatabaseConfiguration('database'),
   <div class="carousel-inner">
 
 <?php
-$timeSlide = 10000;
+$timeSlide = 10000; // this controls the time of each slide
+	$count = 0;
 $acItem = "item active";
-	for($i=0; $i<7; $i++)
-	{
+do{
 		$myresult = mysql_fetch_array($myquery);
 		$myresulttwo = mysql_fetch_array($myquerytwo);
 		//print_r($myresult_a);
@@ -38,22 +41,24 @@ $acItem = "item active";
         <p><?php echo $myresulttwo['review_description']; ?></p>
       </div>
     </div>
-	  <?php }?>
+	  <?php 
+	$count++;
+}while($myresult = mysql_fetch_array($myquery) && $count != $i);
+	  ?>
 	
-	  
+	
 	 
 	
 	<!-- Indicators -->
 	<div class="col-md-12">
 		<ol class="carousel-indicators">
-		
-		<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-		<li data-target="#myCarousel" data-slide-to="1"></li>
-		<li data-target="#myCarousel" data-slide-to="2"></li>
-		<li data-target="#myCarousel" data-slide-to="3"></li>
-		<li data-target="#myCarousel" data-slide-to="4"></li>
-		<li data-target="#myCarousel" data-slide-to="5"></li>
-		<li data-target="#myCarousel" data-slide-to="6"></li>
+			<?php for($j=0; $j<$i; $j++) 
+					{
+						if($j==0)
+							echo '<li data-target="#myCarousel" data-slide-to="0" class="active"></li>';
+						else
+							echo '<li data-target="#myCarousel" data-slide-to="'.$j.'"></li>';
+					}?>
   </ol>
 	</div>
   
@@ -68,7 +73,6 @@ $acItem = "item active";
     <span class="sr-only">Next</span>
   </a> -->	
 </div>
-
-
+	<?php }?>
 
 
